@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Estudio ML — Examen Dra. Villar</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --surface2: #1a2332;
+  --border: #1e293b;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --critical: #ef4444;
+  --critical-bg: rgba(239,68,68,0.08);
+  --critical-border: rgba(239,68,68,0.25);
+  --high: #f59e0b;
+  --high-bg: rgba(245,158,11,0.08);
+  --high-border: rgba(245,158,11,0.25);
+  --medium: #3b82f6;
+  --medium-bg: rgba(59,130,246,0.08);
+  --medium-border: rgba(59,130,246,0.25);
+  --accent: #10b981;
+  --accent-bg: rgba(16,185,129,0.08);
+  --code-bg: #0d1117;
+  --correct: #22c55e;
+  --wrong: #ef4444;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.15), transparent 60%),
+              radial-gradient(ellipse at 70% 50%, rgba(239,68,68,0.1), transparent 60%);
+}
+.header h1 {
+  font-weight: 900;
+  font-size: 2.2rem;
+  letter-spacing: -0.03em;
+  position: relative;
+  background: linear-gradient(135deg, #e2e8f0, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.header p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  position: relative;
+}
+.nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav button {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav button:hover, .nav button.active {
+  background: rgba(99,102,241,0.15);
+  border-color: rgba(99,102,241,0.4);
+  color: #a5b4fc;
+}
+.container { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem; }
+
+.priority-legend {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.section {
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.section.critical { border-color: var(--critical-border); }
+.section.high { border-color: var(--high-border); }
+.section.medium { border-color: var(--medium-border); }
+
+.section-header {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  user-select: none;
+  transition: background 0.2s;
+}
+.section.critical .section-header { background: var(--critical-bg); }
+.section.high .section-header { background: var(--high-bg); }
+.section.medium .section-header { background: var(--medium-bg); }
+
+.section-header:hover { filter: brightness(1.2); }
+
+.priority-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.section.critical .priority-tag { background: var(--critical); color: white; }
+.section.high .priority-tag { background: var(--high); color: #0a0e17; }
+.section.medium .priority-tag { background: var(--medium); color: white; }
+
+.section-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  flex: 1;
+}
+.section-chevron {
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+  color: var(--text-dim);
+}
+.section.open .section-chevron { transform: rotate(90deg); }
+
+.section-body {
+  display: none;
+  padding: 1.25rem;
+  background: var(--surface);
+}
+.section.open .section-body { display: block; }
+
+.card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+.card:last-child { margin-bottom: 0; }
+.card h4 {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  color: #a5b4fc;
+}
+.card p, .card li {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+.card ul { padding-left: 1.2rem; }
+.card li { margin-bottom: 0.25rem; }
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  background: var(--code-bg);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  color: #86efac;
+  border: 1px solid rgba(134,239,172,0.1);
+}
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: #c9d1d9;
+}
+.highlight { color: #ffa657; }
+.comment { color: #6e7681; font-style: italic; }
+.string { color: #a5d6ff; }
+.keyword { color: #ff7b72; }
+
+.exam-tip {
+  background: rgba(245,158,11,0.06);
+  border-left: 3px solid var(--high);
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.85rem;
+}
+.exam-tip strong { color: var(--high); }
+
+.trap-box {
+  background: rgba(239,68,68,0.06);
+  border-left: 3px solid var(--critical);
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.85rem;
+}
+.trap-box strong { color: var(--critical); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: 0.82rem;
+}
+th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  color: #a5b4fc;
+  border-bottom: 2px solid var(--border);
+}
+td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+}
+tr:hover td { background: rgba(99,102,241,0.04); }
+
+/* Quiz section */
+.quiz-section { margin-top: 1.5rem; }
+.quiz-q {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.quiz-q h4 {
+  color: var(--text);
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+.quiz-q pre { margin: 0.5rem 0; }
+.quiz-opts { display: flex; flex-direction: column; gap: 0.4rem; }
+.quiz-opt {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-dim);
+  text-align: left;
+  transition: all 0.2s;
+}
+.quiz-opt:hover:not(.answered) {
+  border-color: rgba(99,102,241,0.5);
+  color: var(--text);
+}
+.quiz-opt.correct {
+  border-color: var(--correct);
+  background: rgba(34,197,94,0.1);
+  color: var(--correct);
+}
+.quiz-opt.wrong {
+  border-color: var(--wrong);
+  background: rgba(239,68,68,0.1);
+  color: var(--wrong);
+  text-decoration: line-through;
+}
+.quiz-explanation {
+  display: none;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(16,185,129,0.06);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.formula-box {
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.75rem 0;
+  text-align: center;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.progress-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--surface);
+  z-index: 200;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--critical), var(--high), var(--accent));
+  width: 0%;
+  transition: width 0.3s;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+@media (max-width: 600px) {
+  .header h1 { font-size: 1.5rem; }
+  .nav button { font-size: 0.75rem; padding: 0.35rem 0.6rem; }
+  .container { padding: 1rem 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Examen ML — Dra. Villar Patiño</h1>
+  <p>Guía priorizada por probabilidad de aparición · Opción múltiple + análisis de código R</p>
+</div>
+
+<div class="nav">
+  <button class="active" onclick="showTab('study')">Guía de Estudio</button>
+  <button onclick="showTab('quiz')">Simulacro (15 preguntas)</button>
+  <button onclick="showTab('cheatsheet')">Cheat Sheet Final</button>
+</div>
+
+<div class="container">
+
+<!-- ==================== TAB: STUDY ==================== -->
+<div id="study" class="tab-content active">
+
+<div class="priority-legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--critical)"></div> CRÍTICO — seguro viene</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--high)"></div> ALTO — muy probable</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--medium)"></div> MEDIO — puede aparecer</div>
+</div>
+
+<!-- ====== SECTION 1: kNN ====== -->
+<div class="section critical open" onclick="toggleSection(this)">
+  <div class="section-header">
+    <span class="priority-tag">CRÍTICO</span>
+    <span class="section-title">1. kNN — El tema estrella de la Dra. Villar</span>
+    <span class="section-chevron">›</span>
+  </div>
+  <div class="section-body" onclick="event.stopPropagation()">
+    <div class="exam-tip"><strong>¿Por qué es crítico?</strong> La Dra. publicó papers sobre kNN ("Condensación controlada en k-NN"). Es SU tema. Tu compañero lo confirmó.</div>
+
+    <div class="card">
+      <h4>Concepto central</h4>
+      <p>kNN clasifica un punto nuevo buscando los <strong>k vecinos más cercanos</strong> en los datos de entrenamiento y asignando la <strong>clase mayoritaria</strong>.</p>
+      <ul>
+        <li><strong>No paramétrico</strong> → no asume distribución de los datos</li>
+        <li><strong>Lazy learning</strong> → no construye modelo, memoriza TODO el dataset</li>
+        <li><strong>Supervisado</strong> → necesita datos etiquetados</li>
+        <li><strong>k impar</strong> en problemas binarios → evita empates</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>Distancias — MEMORÍZALAS</h4>
+      <table>
+        <tr><th>Distancia</th><th>Fórmula</th><th>Minkowski m=</th></tr>
+        <tr><td>Manhattan (L₁)</td><td>Σ|xₖ - yₖ|</td><td>m = 1</td></tr>
+        <tr><td>Euclidiana (L₂)</td><td>√Σ(xₖ - yₖ)²</td><td>m = 2</td></tr>
+        <tr><td>Chebyshev</td><td>max|xₖ - yₖ|</td><td>m → ∞</td></tr>
+        <tr><td>Mahalanobis</td><td>(X-Y)' Σ⁻¹ (X-Y)</td><td>Usa covarianza</td></tr>
+      </table>
+      <div class="trap-box"><strong>Trampa típica:</strong> Confundir <code>*</code> (multiplicación elemento a elemento) con <code>%*%</code> (multiplicación matricial) cuando se calcula Mahalanobis en R.</div>
+    </div>
+
+    <div class="card">
+      <h4>Función knn() en R — paquete <code>class</code></h4>
+<pre><span class="keyword">library</span>(class)
+clasif = <span class="highlight">knn</span>(
+  train = CE[,1:2],  <span class="comment"># solo columnas numéricas del CE</span>
+  test  = CP[,1:2],  <span class="comment"># solo columnas numéricas del CP</span>
+  cl    = CE[,3],    <span class="comment"># vector de clases del CE</span>
+  k     = 5,         <span class="comment"># número de vecinos</span>
+  prob  = TRUE,      <span class="comment"># guardar probabilidad del voto</span>
+  l     = 0,         <span class="comment"># mínimo votos para decisión</span>
+  use.all = TRUE     <span class="comment"># incluir todos los empatados en distancia k</span>
+)</pre>
+      <div class="trap-box"><strong>Trampa clave del parámetro <code>l</code>:</strong> Si <code>l=5</code> y <code>k=8</code>, las observaciones que no alcancen 5 votos de la clase ganadora → <code>NA</code> (duda). Si te preguntan "¿qué pasa si pones l=3?" → se vuelve más estricto, más NAs.</div>
+      <div class="trap-box"><strong>Trampa <code>use.all</code>:</strong> Con <code>TRUE</code> incluye TODOS los puntos empatados en la distancia k (puede ser más de k vecinos). Con <code>FALSE</code> selecciona aleatoriamente para mantener exactamente k.</div>
+    </div>
+
+    <div class="card">
+      <h4>Resubstitución vs. Retención</h4>
+      <ul>
+        <li><strong>Resubstitución:</strong> <code>test = CE</code> (el mismo que train). Con <strong>k=1 SIEMPRE da 100%</strong> porque el punto más cercano a sí mismo es él mismo.</li>
+        <li><strong>Retención:</strong> <code>test = CP</code> (datos no vistos). Da estimación realista.</li>
+      </ul>
+      <div class="exam-tip"><strong>Pregunta segura:</strong> "Si usas kNN con k=1 y test=train, ¿cuál es la clasificación correcta?" → <strong>100% siempre</strong>.</div>
+    </div>
+
+    <div class="card">
+      <h4>Efecto de k en la frontera de decisión</h4>
+      <ul>
+        <li><strong>k pequeño (ej: k=1)</strong> → frontera irregular, <strong>overfitting</strong>, sensible a ruido</li>
+        <li><strong>k grande (ej: k=N)</strong> → frontera suave, <strong>underfitting</strong>, todo se clasifica como la clase mayoritaria</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>Matriz de confusión — "Muy sensible o muy específico"</h4>
+      <table>
+        <tr><th></th><th>Estimada Ω₀</th><th>Estimada Ω₁</th></tr>
+        <tr><td><strong>Real Ω₀</strong></td><td>TN (verdadero neg)</td><td>FP (falso pos)</td></tr>
+        <tr><td><strong>Real Ω₁</strong></td><td>FN (falso neg)</td><td>TP (verdadero pos)</td></tr>
+      </table>
+      <div class="formula-box">
+        cc = (TP + TN) / (TP + TN + FP + FN) × 100<br>
+        <span style="font-size:0.8rem;color:var(--text-dim)">error = 1 − cc</span>
+      </div>
+<pre><span class="comment"># En R:</span>
+mat = <span class="highlight">table</span>(real = CP[,3], pred = clasif)
+cc = <span class="highlight">sum</span>(<span class="highlight">diag</span>(mat)) / <span class="highlight">sum</span>(mat) * 100</pre>
+      <div class="exam-tip"><strong>OJO:</strong> <code>table(real, predicho)</code> — el primer argumento son las clases reales, el segundo las predichas. Si los inviertes, la tabla se transpone y los FP/FN se intercambian.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION 2: Normalización ====== -->
+<div class="section critical" onclick="toggleSection(this)">
+  <div class="section-header">
+    <span class="priority-tag">CRÍTICO</span>
+    <span class="section-title">2. Normalización / Feature Scaling</span>
+    <span class="section-chevron">›</span>
+  </div>
+  <div class="section-body" onclick="event.stopPropagation()">
+    <div class="card">
+      <h4>¿Cuándo normalizar?</h4>
+      <ul>
+        <li>Cuando el algoritmo usa <strong>distancias</strong> (kNN, K-means)</li>
+        <li>Cuando hay <strong>diferentes unidades de medida</strong></li>
+        <li>Cuando hay <strong>grandes diferencias en rangos</strong> de valores</li>
+      </ul>
+      <div class="exam-tip"><strong>Dato clave del examen:</strong> En el dataset de vino, estandarizar mejoró de 71% → 95% porque las variables tenían rangos MUY diferentes (Pr: 278-1680 vs NFl: 0.13-0.66). En el dataset columna2C, NO mejoró porque los rangos ya eran similares.</div>
+    </div>
+
+    <div class="card">
+      <h4>Métodos de normalización</h4>
+      <table>
+        <tr><th>Método</th><th>Fórmula</th><th>Resultado</th></tr>
+        <tr><td><strong>Z-score</strong></td><td>x_new = (x − μ) / σ</td><td>media=0, sd=1</td></tr>
+        <tr><td><strong>Min-max</strong></td><td>x_new = (x − x_min) / (x_max − x_min)</td><td>rango [0,1]</td></tr>
+        <tr><td><strong>Range</strong></td><td>x_new = a + (x − x_min)(b − a) / (x_max − x_min)</td><td>rango [a,b]</td></tr>
+        <tr><td><strong>Log</strong></td><td>x_new = log(x) o log10(x)</td><td>comprime valores grandes</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h4>En R: <code>scale()</code></h4>
+<pre><span class="comment"># Z-score completo (centra + escala):</span>
+datos[,1:4] = <span class="highlight">scale</span>(datos[,1:4])
+
+<span class="comment"># Solo centrar (resta la media, NO divide por sd):</span>
+datos[,1:4] = <span class="highlight">scale</span>(datos[,1:4], <span class="keyword">scale=FALSE</span>)
+
+<span class="comment"># Verificar que sd = 1 después de estandarizar:</span>
+<span class="highlight">sapply</span>(datos[-length(datos)], sd)  <span class="comment"># debe dar 1</span></pre>
+      <div class="trap-box"><strong>Trampa:</strong> <code>scale(x, scale=FALSE)</code> solo CENTRA (resta media), NO estandariza. Si te preguntan "qué pasa si quitas scale=TRUE" o "qué hace scale con scale=FALSE", la respuesta es que solo centra. Las sd originales se mantienen.</div>
+      <div class="trap-box"><strong>Otra trampa:</strong> NO debes estandarizar la columna de clases/etiquetas. Si tu dataframe tiene 5 columnas y la 5ta es la clase, solo haces <code>scale(datos[,1:4])</code>.</div>
+    </div>
+
+    <div class="card">
+      <h4>Naive Bayes vs Normalización</h4>
+      <ul>
+        <li>Estandarizar <strong>NO afecta</strong> a Naive Bayes (calcula media/sd internamente por clase)</li>
+        <li>Eliminar variables correlacionadas (&gt;0.8) <strong>SÍ mejora</strong> NB porque viola el supuesto de independencia condicional</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION 3: Tipos de aprendizaje ====== -->
+<div class="section critical" onclick="toggleSection(this)">
+  <div class="section-header">
+    <span class="priority-tag">CRÍTICO</span>
+    <span class="section-title">3. Tipos de Aprendizaje</span>
+    <span class="section-chevron">›</span>
+  </div>
+  <div class="section-body" onclick="event.stopPropagation()">
+    <div class="card">
+      <h4>Los 3 tipos — grábatelos con ejemplos</h4>
+      <table>
+        <tr><th>Tipo</th><th>Datos</th><th>Tareas</th><th>Ejemplos</th></tr>
+        <tr><td><strong>Supervisado</strong></td><td>Etiquetados</td><td>Clasificación (discreto), Regresión (continuo)</td><td>Detección fraude, diagnóstico, kNN, predicción precios</td></tr>
+        <tr><td><strong>No supervisado</strong></td><td>Sin etiquetas</td><td>Clustering, Reducción dimensionalidad</td><td>Segmentación clientes, marketing, compresión, PCA</td></tr>
+        <tr><td><strong>Por refuerzo</strong></td><td>Retroalimentación (recompensa/penalización)</td><td>Prueba y error</td><td>Robots, Game AI, decisiones en tiempo real</td></tr>
+      </table>
+      <div class="exam-tip"><strong>Distinción clave:</strong> Clasificación = variable DISCRETA (ej: sí/no, tipo A/B/C). Regresión = variable CONTINUA (ej: precio, temperatura). Ambas son supervisadas.</div>
+    </div>
+
+    <div class="card">
+      <h4>Overfitting vs Underfitting</h4>
+      <table>
+        <tr><th></th><th>Overfitting</th><th>Underfitting</th></tr>
+        <tr><td>Problema</td><td>Modelo aprende el ruido</td><td>Modelo no aprende patrones</td></tr>
+        <tr><td>Bias</td><td>Bajo</td><td>Alto</td></tr>
+        <tr><td>Varianza</td><td>Alta</td><td>Baja</td></tr>
+        <tr><td>Error train</td><td>Muy bajo</td><td>Alto</td></tr>
+        <tr><td>Error test</td><td>Alto</td><td>Alto</td></tr>
+        <tr><td>En kNN</td><td>k muy pequeño</td><td>k muy grande</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION 4: División de conjuntos ====== -->
+<div class="section critical" onclick="toggleSection(this)">
+  <div class="section-header">
+    <span class="priority-tag">CRÍTICO</span>
+    <span class="section-title">4. División train/test y sample.split()</span>
+    <span class="section-chevron">›</span>
+  </div>
+  <div class="section-body" onclick="event.stopPropagation()">
+    <div class="card">
+      <h4>Proporciones — memoriza estas</h4>
+      <table>
+        <tr><th>Esquema</th><th>Entrenamiento</th><th>Validación</th><th>Prueba</th></tr>
+        <tr><td>2 conjuntos</td><td>70%</td><td>—</td><td>30%</td></tr>
+        <tr><td>2 conjuntos</td><td>50%</td><td>—</td><td>50%</td></tr>
+        <tr><td>3 conjuntos</td><td>60%</td><td>30%</td><td>10%</td></tr>
+        <tr><td>3 conjuntos</td><td>50%</td><td>25%</td><td>25%</td></tr>
+      </table>
+      <div class="exam-tip"><strong>Clave:</strong> No hay regla fija, pero la más usada en sus prácticas es <strong>70/30</strong>.</div>
+    </div>
+
+    <div class="card">
+      <h4>sample.split() — paquete caTools</h4>
+<pre><span class="keyword">library</span>(caTools)
+<span class="highlight">set.seed</span>(55)  <span class="comment"># SIEMPRE poner semilla para reproducibilidad</span>
+div = <span class="highlight">sample.split</span>(datos$clase, SplitRatio = 0.7)
+<span class="comment"># div es vector booleano: TRUE = CE, FALSE = CP</span>
+
+CE = <span class="highlight">subset</span>(datos, div == TRUE)
+CP = <span class="highlight">subset</span>(datos, div == FALSE)</pre>
+      <div class="trap-box"><strong>Detalle crucial:</strong> <code>sample.split()</code> recibe la COLUMNA DE ETIQUETAS, no el dataframe completo. <strong>Conserva la proporción por clase</strong> (muestreo estratificado). Si le pasas el dataframe entero, no funciona como esperas.</div>
+    </div>
+
+    <div class="card">
+      <h4>Según tamaño de muestra</h4>
+      <ul>
+        <li><strong>Muestra pequeña → Resubstitución</strong> (CE = CP). Rápido pero optimista.</li>
+        <li><strong>Muestra grande → Retención</strong> (CE separado de CP). Más realista.</li>
+        <li><strong>Muestra suficientemente grande → CE + CV + CP</strong>. Afina hiperparámetros con validación.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION 5: Trampas de código R ====== -->
+<div class="section critical" onclick="toggleSection(this)">
+  <div class="section-header">
+    <span class="priority-tag">CRÍTICO</span>
+    <span class="section-title">5. Trampas de Código R — "Quita un signo"</span>
+    <span class="section-chevron">›</span>
+  </div>
+  <div class="section-body" onclick="event.stopPropagation()">
+    <div class="exam-tip"><strong>Formato de pregunta:</strong> Te dan código R y preguntan "¿qué da de output?" o "¿qué pasa si cambias X?"</div>
+
+    <div class="card">
+      <h4>Trampa 1: Operadores lógicos <code>&</code> vs <code>&&</code></h4>
+<pre>x = c(TRUE, FALSE, TRUE)
+y = c(FALSE, TRUE, TRUE)
+
+x <span class="highlight">&</span> y   <span class="comment"># → FALSE FALSE TRUE  (vectorizado, elemento a elemento)</span>
+x <span class="highlight">&&</span> y  <span class="comment"># → FALSE  (solo evalúa el PRIMER elemento)</span></pre>
+    </div>
+
+    <div class="card">
+      <h4>Trampa 2: <code>*</code> vs <code>%*%</code></h4>
+<pre>A = matrix(1:4, nrow=2)   <span class="comment"># |1 3|</span>
+B = matrix(5:8, nrow=2)   <span class="comment"># |2 4|</span>
+
+A <span class="highlight">*</span> B    <span class="comment"># multiplicación ELEMENTO a ELEMENTO</span>
+A <span class="highlight">%*%</span> B  <span class="comment"># multiplicación MATRICIAL real</span></pre>
+    </div>
+
+    <div class="card">
+      <h4>Trampa 3: matrix() llena por COLUMNA</h4>
+<pre>m = <span class="highlight">matrix</span>(1:6, nrow=2, ncol=3)
+<span class="comment"># Resultado:      |1 3 5|
+#                  |2 4 6|
+# NO es:          |1 2 3|
+#                  |4 5 6|</span>
+
+<span class="comment"># Para llenar por renglón:</span>
+m = <span class="highlight">matrix</span>(1:6, nrow=2, ncol=3, <span class="keyword">byrow=TRUE</span>)
+<span class="comment"># Resultado:      |1 2 3|
+#                  |4 5 6|</span></pre>
+    </div>
+
+    <div class="card">
+      <h4>Trampa 4: Índices negativos = EXCLUIR</h4>
+<pre>v = c(10, 20, 30, 40, 50)
+v[3]     <span class="comment"># → 30 (posición 3)</span>
+v[-3]    <span class="comment"># → 10 20 40 50 (TODO EXCEPTO posición 3)</span>
+v[c(-1,-2)] <span class="comment"># → 30 40 50 (todo excepto 1 y 2)</span></pre>
+    </div>
+
+    <div class="card">
+      <h4>Trampa 5: Reciclaje de vectores</h4>
+<pre>x = c(1, 2, 3, 4, 5, 6)
+y = c(10, 20)
+x + y  <span class="comment"># → 11 22 13 24 15 26  (y se recicla: 10,20,10,20,10,20)</span></pre>
+    </div>
+
+    <div class="card">
+      <h4>Trampa 6: <code>na.rm = TRUE</code></h4>
+<pre>v = c(1, 2, NA, 4)
+<span class="highlight">sum</span>(v)                <span class="comment"># → NA  (¡sin na.rm!)</span>
+<span class="highlight">sum</span>(v, na.rm=TRUE)    <span class="comment"># → 7   (ignora el NA)</span>
+<span class="highlight">mean</span>(v, na.rm=TRUE)   <span class="comment"># → 2.333  (7/3, NO 7/4)</span></pre>
+      <div class="trap-box"><strong>OJO:</strong> mean() con na.rm=TRUE divide entre el número de valores NO-NA (3), no entre el total (4).</div>
+    </div>
+
+    <div class="card">
+      <h4>Trampa 7: Precedencia de operadores</h4>
+<pre><span class="comment"># ^ → unario -,+ → %% → *,/ → +,- → comparaciones → ! → &,&& → |,||</span>
+2 + 3 * 4     <span class="comment"># → 14 (no 20)</span>
+-2 ^ 2        <span class="comment"># → -4 (no 4, porque ^ tiene mayor prioridad que -)</span>
+!TRUE & FALSE <span class="comment"># → FALSE  (! se evalúa primero → FALSE & FALSE)</span></pre>
+    </div>
+
+    <div class="card">
+      <h4>Trampa 8: <code>ifelse()</code> vectorizado vs <code>if/else</code></h4>
+<pre>x = c(1, -2, 3, -4)
+<span class="highlight">ifelse</span>(x > 0, "pos", "neg")  <span class="comment"># → "pos" "neg" "pos" "neg" (vectorizado)</span>
+
+<span class="comment"># if/else NO es vectorizado, solo evalúa el primer elemento:</span>
+<span class="keyword">if</span>(x > 0) "pos" <span class="keyword">else</span> "neg"  <span class="comment"># → "pos" (solo evalúa x[1]=1)</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION 6: Valores / IA Responsable ====== -->
+<div class="section high" onclick="toggleSection(this)">
+  <div class="section-header">
+    <span class="priority-tag">ALTO</span>
+    <span class="section-title">6. Los 6 Valores — Rome Call + IA Responsable</span>
+    <span class="section-chevron">›</span>
+  </div>
+  <div class="section-body" onclick="event.stopPropagation()">
+    <div class="card">
+      <h4>Los 6 principios del Rome Call for AI Ethics</h4>
+      <table>
+        <tr><th>#</th><th>Principio</th><th>Significa que...</th></tr>
+        <tr><td>1</td><td><strong>Transparencia</strong></td><td>Los sistemas de IA deben ser comprensibles para todos</td></tr>
+        <tr><td>2</td><td><strong>Inclusión</strong></td><td>No discriminar a nadie; todo ser humano tiene igual dignidad</td></tr>
+        <tr><td>3</td><td><strong>Responsabilidad (Accountability)</strong></td><td>Siempre debe haber alguien que responda por lo que hace la máquina</td></tr>
+        <tr><td>4</td><td><strong>Imparcialidad</strong></td><td>Los sistemas no deben seguir ni crear sesgos</td></tr>
+        <tr><td>5</td><td><strong>Fiabilidad (Reliability)</strong></td><td>La IA debe ser confiable</td></tr>
+        <tr><td>6</td><td><strong>Seguridad y Privacidad</strong></td><td>Los sistemas deben ser seguros y respetar la privacidad</td></tr>
+      </table>
+      <div class="exam-tip"><strong>Mnemónico:</strong> <strong>T-I-R-I-F-S</strong> → "TIRIFS" o piénsalo como: <strong>T</strong>ransparencia, <strong>I</strong>nclusión, <strong>R</strong>esponsabilidad, <strong>I</strong>mparcialidad, <strong>F</strong>iabilidad, <strong>S</strong>eguridad.</div>
+    </div>
+
+    <div class="card">
+      <h4>ISO: IA Ética vs IA Responsable</h4>
+      <ul>
+        <li><strong>Ética</strong> = valores / intención (brújula moral)</li>
+        <li><strong>Responsable</strong> = controles / herramientas prácticas (mapa + equipo)</li>
+      </ul>
+      <p><strong>3 preocupaciones éticas ISO:</strong> sesgo, uso indebido de datos personales, falta de transparencia.</p>
+      <p><strong>3 líneas de defensa:</strong> 1ª operativa (devs), 2ª supervisión (riesgos/compliance), 3ª independiente (auditoría).</p>
+    </div>
+
+    <div class="card">
+      <h4>Normas ISO relevantes</h4>
+      <table>
+        <tr><th>Norma</th><th>Tema</th></tr>
+        <tr><td>ISO/IEC 42001:2023</td><td>Sistema de gestión de IA (riesgos, trazabilidad, transparencia)</td></tr>
+        <tr><td>ISO/IEC 23053:2022</td><td>Marco para sistemas de IA con ML</td></tr>
+        <tr><td>ISO/IEC 5259-1:2024</td><td>Calidad de datos para analytics y ML</td></tr>
+        <tr><td>ISO/IEC 23894:2023</td><td>Gestión de riesgos en IA</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION 7: Estadística descriptiva en R ====== -->
+<div class="section high" onclick="toggleSection(this)">
+  <div class="section-header">
+    <span class="priority-tag">ALTO</span>
+    <span class="section-title">7. Funciones de Estadística Descriptiva en R</span>
+    <span class="section-chevron">›</span>
+  </div>
+  <div class="section-body" onclick="event.stopPropagation()">
+    <div class="card">
+      <h4>Funciones base R</h4>
+      <table>
+        <tr><th>Función</th><th>Qué hace</th></tr>
+        <tr><td><code>mean(x)</code></td><td>Media aritmética</td></tr>
+        <tr><td><code>median(x)</code></td><td>Mediana</td></tr>
+        <tr><td><code>var(x)</code></td><td>Varianza muestral</td></tr>
+        <tr><td><code>sd(x)</code></td><td>Desviación estándar muestral</td></tr>
+        <tr><td><code>quantile(x)</code></td><td>Cuartiles (0, 25, 50, 75, 100%)</td></tr>
+        <tr><td><code>IQR(x)</code></td><td>Rango intercuartílico (Q3 − Q1)</td></tr>
+        <tr><td><code>range(x)</code></td><td>Vector c(min, max) — NO es el rango numérico</td></tr>
+        <tr><td><code>diff(range(x))</code></td><td>Rango real (max − min)</td></tr>
+      </table>
+      <div class="trap-box"><strong>Trampa:</strong> <code>range(x)</code> devuelve <code>c(min, max)</code>, NO el valor del rango. Para obtener el rango numérico necesitas <code>diff(range(x))</code>.</div>
+    </div>
+
+    <div class="card">
+      <h4>Requieren paquetes o cálculo manual</h4>
+      <ul>
+        <li><strong>Moda:</strong> <code>DescTools::Mode(x)</code> o <code>modeest::mfv(x)</code></li>
+        <li><strong>Asimetría:</strong> <code>moments::skewness(x)</code></li>
+        <li><strong>Curtosis:</strong> <code>moments::kurtosis(x)</code></li>
+        <li><strong>CV:</strong> <code>sd(x)/mean(x)*100</code> (manual)</li>
+      </ul>
+      <div class="exam-tip"><strong>Notación <code>paquete::funcion()</code></strong> permite usar una función sin cargar toda la librería con <code>library()</code>.</div>
+    </div>
+
+    <div class="card">
+      <h4>Interpretaciones para examen</h4>
+      <ul>
+        <li><strong>Sesgo &gt; 0</strong> = asimetría derecha (cola a la derecha, media &gt; mediana)</li>
+        <li><strong>Sesgo &lt; 0</strong> = asimetría izquierda (cola a la izquierda, media &lt; mediana)</li>
+        <li><strong>Curtosis &gt; 3</strong> = leptocúrtica (colas pesadas, más puntiaguda)</li>
+        <li><strong>CV menor</strong> = mayor consistencia entre datos</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION 8: Preprocesamiento ====== -->
+<div class="section high" onclick="toggleSection(this)">
+  <div class="section-header">
+    <span class="priority-tag">ALTO</span>
+    <span class="section-title">8. Preprocesamiento: Imputación y Codificación</span>
+    <span class="section-chevron">›</span>
+  </div>
+  <div class="section-body" onclick="event.stopPropagation()">
+    <div class="card">
+      <h4>Estrategias de imputación de NA</h4>
+      <table>
+        <tr><th>Estrategia</th><th>Función R</th><th>Cuándo usar</th></tr>
+        <tr><td>Eliminar renglones</td><td><code>na.omit(df)</code></td><td>Pocos NAs</td></tr>
+        <tr><td>Media</td><td><code>df$b[is.na(df$b)] = mean(df$b, na.rm=T)</code></td><td>Numéricas</td></tr>
+        <tr><td>Mediana</td><td><code>df$b[is.na(df$b)] = median(df$b, na.rm=T)</code></td><td>Numéricas con outliers</td></tr>
+        <tr><td>Hot-deck</td><td><code>ifelse(is.na(col), sample(...))</code></td><td>Categóricas</td></tr>
+        <tr><td>kNN</td><td><code>VIM::kNN(df, k=5)</code></td><td>Más preciso</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h4>Funciones útiles para NAs</h4>
+<pre><span class="highlight">complete.cases</span>(df)   <span class="comment"># vector booleano, FALSE = tiene NA</span>
+<span class="highlight">is.na</span>(col)            <span class="comment"># detecta NA (y NaN)</span>
+<span class="highlight">which</span>(is.na(df$x))   <span class="comment"># índices con NA</span>
+<span class="highlight">unique</span>(col)           <span class="comment"># valores únicos (incluye NA)</span></pre>
+    </div>
+
+    <div class="card">
+      <h4>Codificación de categóricas</h4>
+<pre><span class="highlight">factor</span>(col,
+  levels = c(<span class="string">"France"</span>, <span class="string">"Spain"</span>, <span class="string">"Germany"</span>),
+  labels = c(1, 2, 3)
+)</pre>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION 9: DataFrames ====== -->
+<div class="section medium" onclick="toggleSection(this)">
+  <div class="section-header">
+    <span class="priority-tag">MEDIO</span>
+    <span class="section-title">9. DataFrames, Vectores y Tipos de Datos en R</span>
+    <span class="section-chevron">›</span>
+  </div>
+  <div class="section-body" onclick="event.stopPropagation()">
+    <div class="card">
+      <h4>Acceso a datos en dataframe</h4>
+<pre>df[renglón, columna]  <span class="comment"># acceso por posición</span>
+df$columna            <span class="comment"># acceso columna como vector</span>
+df[, c(1,3)]          <span class="comment"># columnas 1 y 3</span>
+df[1:5, ]             <span class="comment"># renglones 1 a 5</span></pre>
+    </div>
+    <div class="card">
+      <h4>Tipos de datos</h4>
+      <p><code>logical</code> (TRUE/FALSE), <code>integer</code> (3L), <code>numeric</code> (6.8), <code>character</code> ("hola"), <code>complex</code> (9+4.2i). Verificar con <code>class()</code>.</p>
+      <p>Valores especiales: <code>NA</code> (faltante), <code>NaN</code> (0/0), <code>Inf</code> (1/0).</p>
+      <div class="trap-box"><strong>Trampa:</strong> <code>is.na(NaN)</code> devuelve <code>TRUE</code>. Pero <code>is.nan(NA)</code> devuelve <code>FALSE</code>. Es decir, <code>is.na()</code> detecta AMBOS, <code>is.nan()</code> solo detecta NaN.</div>
+    </div>
+    <div class="card">
+      <h4>Escalas de medición</h4>
+      <table>
+        <tr><th>Escala</th><th>Distingue</th><th>Ejemplo</th></tr>
+        <tr><td>Nominal</td><td>Equivalencia (= / ≠)</td><td>Color, número de jugador</td></tr>
+        <tr><td>Ordinal</td><td>Orden (&lt; / &gt;)</td><td>Likert, satisfacción</td></tr>
+        <tr><td>Intervalo</td><td>Distancia constante</td><td>Temperatura °C</td></tr>
+        <tr><td>Razón</td><td>Cero absoluto, razones</td><td>Peso, longitud, dinero</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- end study tab -->
+
+
+<!-- ==================== TAB: QUIZ ==================== -->
+<div id="quiz" class="tab-content">
+  <h2 style="margin-bottom:1rem;font-size:1.3rem;">Simulacro de Examen — 15 preguntas</h2>
+  <p style="color:var(--text-dim);margin-bottom:1.5rem;font-size:0.9rem;">Preguntas estilo Dra. Villar: opción múltiple y análisis de código R.</p>
+  <div class="quiz-section" id="quiz-container"></div>
+</div>
+
+
+<!-- ==================== TAB: CHEATSHEET ==================== -->
+<div id="cheatsheet" class="tab-content">
+  <h2 style="margin-bottom:1rem;font-size:1.3rem;">Cheat Sheet — Lo que debes saber de memoria</h2>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <h4>Flujo completo kNN en R (cópialo y repítelo)</h4>
+<pre>datos = read.table("archivo.txt", header=TRUE)
+datos$clase = as.factor(datos$clase)
+library(caTools)
+set.seed(55)
+div = sample.split(datos$clase, SplitRatio=0.7)
+CE = subset(datos, div==TRUE)
+CP = subset(datos, div==FALSE)
+
+# Estandarizar (SOLO si escalas diferentes)
+CE[,1:2] = scale(CE[,1:2])
+CP[,1:2] = scale(CP[,1:2])
+
+library(class)
+pred = knn(train=CE[,1:2], test=CP[,1:2], cl=CE$clase, k=5)
+mat = table(real=CP$clase, pred=pred)
+cc = sum(diag(mat))/sum(mat)*100</pre>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <h4>Fórmulas de normalización</h4>
+    <p><strong>Z-score:</strong> x_new = (x − μ) / σ → media=0, sd=1</p>
+    <p><strong>Min-max:</strong> x_new = (x − x_min) / (x_max − x_min) → [0,1]</p>
+    <p><strong>Range [a,b]:</strong> x_new = a + (x − x_min)(b − a) / (x_max − x_min)</p>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <h4>Distancias (Minkowski general: (Σ|xₖ-yₖ|^m)^(1/m))</h4>
+    <p><strong>Manhattan:</strong> m=1 → Σ|xₖ-yₖ|</p>
+    <p><strong>Euclidiana:</strong> m=2 → √Σ(xₖ-yₖ)²</p>
+    <p><strong>Chebyshev:</strong> m→∞ → max|xₖ-yₖ|</p>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <h4>Proporciones de división</h4>
+    <p>70/30 · 50/50 · 60/30/10 · 50/25/25</p>
+    <p>Muestra chica → resubstitución · Grande → retención · Muy grande → CE+CV+CP</p>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <h4>Rome Call (TIRIFS)</h4>
+    <p><strong>T</strong>ransparencia · <strong>I</strong>nclusión · <strong>R</strong>esponsabilidad · <strong>I</strong>mparcialidad · <strong>F</strong>iabilidad · <strong>S</strong>eguridad y Privacidad</p>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <h4>Reglas de R que siempre preguntan</h4>
+    <ul>
+      <li><code>matrix()</code> llena por COLUMNA por defecto</li>
+      <li><code>&</code> vectorizado, <code>&&</code> solo primer elemento</li>
+      <li><code>*</code> elemento a elemento, <code>%*%</code> matricial</li>
+      <li>Índices negativos = EXCLUIR</li>
+      <li><code>is.na(NaN)</code> = TRUE</li>
+      <li><code>range(x)</code> = c(min,max), NO el rango numérico</li>
+      <li>k=1 resubstitución = 100% siempre</li>
+      <li><code>scale(x, scale=FALSE)</code> solo centra, no estandariza</li>
+      <li><code>-2^2</code> = -4 (^ tiene más prioridad que -)</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<script>
+// === Tab navigation ===
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// === Section toggle ===
+function toggleSection(el) {
+  el.classList.toggle('open');
+}
+
+// === Scroll progress ===
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+});
+
+// === Quiz ===
+const questions = [
+  {
+    q: "¿Qué tipo de aprendizaje es kNN?",
+    opts: ["Supervisado paramétrico", "Supervisado no paramétrico (lazy learning)", "No supervisado", "Por refuerzo"],
+    correct: 1,
+    exp: "kNN es supervisado (necesita etiquetas), no paramétrico (no asume distribución) y lazy learning (memoriza todos los datos, no construye modelo)."
+  },
+  {
+    q: "¿Cuál es el resultado de este código?\n<pre>m = matrix(1:6, nrow=2)\nm[1,2]</pre>",
+    opts: ["2", "3", "4", "Error"],
+    correct: 1,
+    exp: "matrix() llena por columna: col1={1,2}, col2={3,4}, col3={5,6}. m[1,2] = renglón 1, columna 2 = 3."
+  },
+  {
+    q: "Si usas kNN con k=1 y test = train (resubstitución), ¿qué porcentaje de clasificación correcta obtienes?",
+    opts: ["Depende del dataset", "Cercano a 50%", "100% siempre", "No se puede calcular"],
+    correct: 2,
+    exp: "Con k=1 y resubstitución, el punto más cercano a cada dato es él mismo, por lo que siempre se clasifica correctamente → 100%."
+  },
+  {
+    q: "¿Cuál es la fórmula de normalización Min-Max?",
+    opts: ["(x − μ) / σ", "(x − x_min) / (x_max − x_min)", "a + (x − x_min)(b − a) / (x_max − x_min)", "log(x)"],
+    correct: 1,
+    exp: "Min-Max escala al rango [0,1]. Z-score es (x−μ)/σ. Range es la generalización a [a,b]."
+  },
+  {
+    q: "¿Qué devuelve range(c(3,7,1,9))?",
+    opts: ["8", "c(1, 9)", "9", "c(3, 7, 1, 9)"],
+    correct: 1,
+    exp: "range() devuelve c(min, max) = c(1, 9). Para obtener el rango numérico usas diff(range(x)) = 8."
+  },
+  {
+    q: "¿Qué hace sample.split(datos$clase, SplitRatio=0.7)?",
+    opts: ["Divide en 70% train por muestreo aleatorio simple", "Divide conservando proporción por clase (estratificado)", "Crea 3 conjuntos", "Selecciona 70% de las columnas"],
+    correct: 1,
+    exp: "sample.split() hace muestreo estratificado: conserva la proporción de cada clase en train y test."
+  },
+  {
+    q: "¿Cuál es el resultado?\n<pre>x = c(TRUE, FALSE, TRUE)\ny = c(FALSE, TRUE, TRUE)\nx && y</pre>",
+    opts: ["c(FALSE, FALSE, TRUE)", "FALSE", "TRUE", "Error"],
+    correct: 1,
+    exp: "&& solo evalúa el primer elemento: TRUE && FALSE = FALSE. Para operación vectorizada se usa & (un solo ampersand)."
+  },
+  {
+    q: "¿Qué pasa si haces scale(x, scale=FALSE)?",
+    opts: ["Estandariza completamente (media=0, sd=1)", "Solo centra (resta media, sd original)", "Solo escala (divide entre sd)", "Error: scale necesita TRUE"],
+    correct: 1,
+    exp: "scale=FALSE hace que no divida entre la desviación estándar. Solo resta la media (centra los datos)."
+  },
+  {
+    q: "En la matriz de confusión, ¿qué es un FP (falso positivo)?",
+    opts: ["Predijo negativo pero era positivo", "Predijo positivo pero era negativo", "Predijo positivo y era positivo", "Predijo negativo y era negativo"],
+    correct: 1,
+    exp: "Falso Positivo = predijo que SÍ (positivo) pero en realidad era NO (negativo). Es una 'falsa alarma'."
+  },
+  {
+    q: "Para un dataset donde las variables tienen escalas muy diferentes (ej: una de 0-1 y otra de 0-10000), ¿qué debes hacer antes de aplicar kNN?",
+    opts: ["Nada, kNN es robusto", "Estandarizar con scale()", "Eliminar la variable de mayor escala", "Aplicar log() a todas"],
+    correct: 1,
+    exp: "La distancia euclidiana se dominaría por la variable de mayor escala. Estandarizar con scale() iguala las escalas. Ejemplo: dataset vino mejoró de 71% a 95%."
+  },
+  {
+    q: "¿Cuáles son los 6 principios del Rome Call?",
+    opts: ["Transparencia, Inclusión, Responsabilidad, Imparcialidad, Fiabilidad, Seguridad", "Justicia, Equidad, Privacidad, Seguridad, Eficiencia, Transparencia", "Ética, Seguridad, Privacidad, Eficiencia, Escalabilidad, Robustez", "Transparencia, Eficiencia, Inclusión, Seguridad, Autonomía, Resiliencia"],
+    correct: 0,
+    exp: "TIRIFS: Transparencia, Inclusión, Responsabilidad (Accountability), Imparcialidad, Fiabilidad (Reliability), Seguridad y Privacidad."
+  },
+  {
+    q: "¿Cuál es el resultado?\n<pre>v = c(10,20,30,40,50)\nv[c(-2,-4)]</pre>",
+    opts: ["c(20, 40)", "c(10, 30, 50)", "Error", "c(-2, -4)"],
+    correct: 1,
+    exp: "Índices negativos EXCLUYEN esas posiciones. Se excluyen posiciones 2 y 4 → queda c(10, 30, 50)."
+  },
+  {
+    q: "¿Cuál es la diferencia entre IA ética e IA responsable según ISO?",
+    opts: ["Son sinónimos", "Ética = valores/intención; Responsable = controles/herramientas prácticas", "Ética es legal; Responsable es moral", "Responsable aplica solo a empresas grandes"],
+    correct: 1,
+    exp: "Ética = brújula moral (valores). Responsable = mapa + equipo (herramientas, controles, auditorías concretas)."
+  },
+  {
+    q: "¿Qué efecto tiene un k grande en kNN?",
+    opts: ["Overfitting, frontera irregular", "Underfitting, frontera suave", "Mejor precisión siempre", "No tiene efecto"],
+    correct: 1,
+    exp: "k grande → frontera más suave → underfitting. k pequeño → frontera irregular → overfitting. Se busca un balance."
+  },
+  {
+    q: "¿Cuál es el resultado?\n<pre>sum(c(1, 2, NA, 4))</pre>",
+    opts: ["7", "NA", "3", "Error"],
+    correct: 1,
+    exp: "Sin na.rm=TRUE, cualquier operación con NA devuelve NA. Se necesita sum(c(1,2,NA,4), na.rm=TRUE) para obtener 7."
+  }
+];
+
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  let html = '';
+  questions.forEach((q, i) => {
+    html += `<div class="quiz-q" id="q${i}">
+      <h4>Pregunta ${i+1} de ${questions.length}</h4>
+      <div>${q.q}</div>
+      <div class="quiz-opts">
+        ${q.opts.map((o, j) => `<button class="quiz-opt" onclick="answerQuiz(${i},${j})">${String.fromCharCode(65+j)}) ${o}</button>`).join('')}
+      </div>
+      <div class="quiz-explanation" id="exp${i}">${q.exp}</div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function answerQuiz(qi, oi) {
+  const qEl = document.getElementById('q' + qi);
+  if (qEl.dataset.answered) return;
+  qEl.dataset.answered = 'true';
+  const opts = qEl.querySelectorAll('.quiz-opt');
+  opts.forEach((o, j) => {
+    o.classList.add('answered');
+    if (j === questions[qi].correct) o.classList.add('correct');
+    else if (j === oi) o.classList.add('wrong');
+  });
+  document.getElementById('exp' + qi).style.display = 'block';
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
